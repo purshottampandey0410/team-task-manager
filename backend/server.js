@@ -1,29 +1,20 @@
-require("dotenv").config();
-
-const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 
-const app = express();
+// ✅ FINAL CORS FIX (handles preflight manually)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
 
-// ✅ SIMPLE CORS (NO CRASH)
-app.use(cors());
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // ✅ handle preflight
+  }
 
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("🔥 BACKEND LIVE 🔥");
-});
-
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("DB connected"))
-  .catch(console.error);
-
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/tasks", require("./routes/task"));
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  next();
 });
