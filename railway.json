@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "cd backend && npm install && node server.js"
+    "startCommand": "npm install && node server.js"
   }
 }
