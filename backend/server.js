@@ -6,14 +6,13 @@ const cors = require("cors");
 
 const app = express();
 
-// 🔴 IMPORTANT: CORS FIRST
+// ✅ CORS
 app.use(cors({
   origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// 🔴 Handle preflight explicitly
 app.options("*", cors());
 
 app.use(express.json());
@@ -22,6 +21,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("🔥 NEW SERVER WORKING 🔥");
 });
+
+// ✅ FIXED CREATE USER ROUTE
 app.get("/create-user", async (req, res) => {
   const bcrypt = require("bcryptjs");
   const User = require("./models/user");
@@ -34,6 +35,9 @@ app.get("/create-user", async (req, res) => {
     password: hashed,
     role: "Admin"
   });
+
+  res.json(user); // ✅ IMPORTANT
+});
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
