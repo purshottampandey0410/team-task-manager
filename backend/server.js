@@ -1,5 +1,3 @@
-const crypto = require("crypto");
-global.crypto = crypto;
 require("dotenv").config();
 
 const express = require("express");
@@ -8,13 +6,16 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-  })
-);
+// 🔴 IMPORTANT: CORS FIRST
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// 🔴 Handle preflight explicitly
+app.options("*", cors());
+
 app.use(express.json());
 
 // ROOT ROUTE
@@ -24,14 +25,14 @@ app.get("/", (req, res) => {
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("DB connected"))
-.catch(err => console.log(err));
+  .then(() => console.log("DB connected"))
+  .catch(err => console.log(err));
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/tasks", require("./routes/task"));
 
-// ✅ FIXED PORT
+// PORT
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

@@ -18,6 +18,7 @@ export default function Login({ setPage }) {
       localStorage.setItem("token", res.data.token);
       setPage("dashboard");
     } catch (err) {
+      console.log("ERROR:", err.response?.data || err.message);
       alert("Login failed");
     }
   };
@@ -25,8 +26,15 @@ export default function Login({ setPage }) {
   return (
     <div>
       <h2>Login</h2>
-      <input placeholder="Email" onChange={e => setEmail(e.target.value)} />
-      <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)} />
+      <input
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        placeholder="Password"
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <button onClick={handleLogin}>Login</button>
     </div>
   );
