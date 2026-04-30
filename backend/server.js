@@ -6,37 +6,14 @@ const cors = require("cors");
 
 const app = express();
 
-// ✅ CORS
-app.use(cors({
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-app.options("*", cors());
+// ✅ SIMPLE CORS (fixes all your errors)
+app.use(cors());
 
 app.use(express.json());
 
 // ROOT ROUTE
 app.get("/", (req, res) => {
   res.send("🔥 NEW SERVER WORKING 🔥");
-});
-
-// ✅ FIXED CREATE USER ROUTE
-app.get("/create-user", async (req, res) => {
-  const bcrypt = require("bcryptjs");
-  const User = require("./models/user");
-
-  const hashed = await bcrypt.hash("123456", 10);
-
-  const user = await User.create({
-    name: "Admin",
-    email: "admin@gmail.com",
-    password: hashed,
-    role: "Admin"
-  });
-
-  res.json(user); // ✅ IMPORTANT
 });
 
 // MongoDB connection
@@ -48,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/tasks", require("./routes/task"));
 
-// PORT
+// PORT (Railway compatible)
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
