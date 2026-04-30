@@ -7,7 +7,7 @@ export default function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    axios.get("http://localhost:5000/api/tasks", {
+    axios.get("https://team-task-manager-production-0ae9.up.railway.app/api/auth/login", {
       headers: { authorization: token }
     })
     .then(res => setTasks(res.data))
