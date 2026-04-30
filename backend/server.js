@@ -6,14 +6,21 @@ const cors = require("cors");
 
 const app = express();
 
-// ✅ SIMPLE CORS (fixes all your errors)
-app.use(cors());
+// ✅ CORS FIX (important)
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// ✅ Handle preflight (very important for Railway)
+app.options("*", cors());
 
 app.use(express.json());
 
-// ROOT ROUTE
+// ✅ ROOT ROUTE (update text to confirm deployment)
 app.get("/", (req, res) => {
-  res.send("🔥 NEW SERVER WORKING 🔥");
+  res.send("🔥 CORS FIXED VERSION 🔥");
 });
 
 // MongoDB connection
@@ -25,7 +32,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/tasks", require("./routes/task"));
 
-// PORT (Railway compatible)
+// PORT
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
