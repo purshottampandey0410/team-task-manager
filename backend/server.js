@@ -22,6 +22,18 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("🔥 NEW SERVER WORKING 🔥");
 });
+app.get("/create-user", async (req, res) => {
+  const bcrypt = require("bcryptjs");
+  const User = require("./models/user");
+
+  const hashed = await bcrypt.hash("123456", 10);
+
+  const user = await User.create({
+    name: "Admin",
+    email: "admin@gmail.com",
+    password: hashed,
+    role: "Admin"
+  });
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
