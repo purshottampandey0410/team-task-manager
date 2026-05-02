@@ -1,22 +1,28 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function Login({ setPage }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "https://team-task-manager-production-0ae9.up.railway.app/api/auth/login",
+        "https://team-task-manager-production-3327.up.railway.app/api/auth/login",
         {
           email,
           password
         }
       );
 
+      // save token
       localStorage.setItem("token", res.data.token);
-      setPage("dashboard");
+
+      alert("Login successful");
+
+      // redirect to dashboard
+      window.location.href = "/dashboard";
+
     } catch (err) {
       console.log("ERROR:", err.response?.data || err.message);
       alert("Login failed");
@@ -24,17 +30,26 @@ export default function Login({ setPage }) {
   };
 
   return (
-    <div>
+    <div style={{ padding: 20 }}>
       <h2>Login</h2>
+
       <input
         placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+
+      <br /><br />
+
       <input
         placeholder="Password"
         type="password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+
+      <br /><br />
+
       <button onClick={handleLogin}>Login</button>
     </div>
   );
